@@ -22,6 +22,9 @@ public class UiManager : MonoBehaviour {
 		
 			instance = this;
 			DontDestroyOnLoad (this.gameObject);
+		}else{
+		
+			Destroy(gameObject);
 		}
 		SceneManager.sceneLoaded += UiMenu;
 	}
