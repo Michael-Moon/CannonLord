@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,7 +12,7 @@ public class UiManager : MonoBehaviour {
 	public Button btnPause, btnContinue, btnReiniciar, btnInicio;   	// Botões que tem na cena de jogo
 	public Text txtpontos,txtRecarregando;								// textos de ponto e recarregamento do tiro
 	//pontos e se jogo começou
-	public bool ComecouJogo;											// bool que verificar se jogo começou
+	[SerializeField]public bool ComecouJogo;							// bool que verificar se jogo começou
 	public int pontos;													// int de pontuação	
 
 	//metodo Awake para pega instancia do obj e não destruir, qnd cena recarregada
@@ -22,9 +22,9 @@ public class UiManager : MonoBehaviour {
 		
 			instance = this;
 			DontDestroyOnLoad (this.gameObject);
-		}else{
+		} else {
 		
-			Destroy(gameObject);
+			Destroy (gameObject);
 		}
 		SceneManager.sceneLoaded += UiMenu;
 	}
@@ -60,27 +60,43 @@ public class UiManager : MonoBehaviour {
 		btnContinue.gameObject.SetActive (false);
 		btnPause.gameObject.SetActive (false);
 		txtRecarregando.gameObject.SetActive (false);
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		//atualização txt quando ganhar pontos
 		txtpontos.text = pontos.ToString ();
+
+		if (ComecouJogo == false) {
+		
+			btnContinue.gameObject.SetActive (false);
+			btnPause.gameObject.SetActive (false);
+			btnReiniciar.gameObject.SetActive (false);
+		}
 	}
 	//Pausando Game
 	void PauseGame(){
 	
-		btnPause.gameObject.SetActive (false);
-		btnContinue.gameObject.SetActive (true);
-		Time.timeScale = 0;
+		if (ComecouJogo) {
+		
+			btnPause.gameObject.SetActive (false);
+			btnContinue.gameObject.SetActive (true);
+			Time.timeScale = 0;
+		}
+
 
 	}
 	//Tirando Pause
 	void DesPause(){
 	
-		btnPause.gameObject.SetActive (true);
-		btnContinue.gameObject.SetActive (false);
-		Time.timeScale = 1;
+		if (ComecouJogo) {
+		
+			btnPause.gameObject.SetActive (true);
+			btnContinue.gameObject.SetActive (false);
+			Time.timeScale = 1;
+		}
+
 	}
 	//Iniciando Jogo
 	void IniciaJogo(){
@@ -88,17 +104,20 @@ public class UiManager : MonoBehaviour {
 		ComecouJogo = true;
 		btnInicio.gameObject.SetActive (false);
 		btnPause.gameObject.SetActive (true);
+		btnContinue.gameObject.SetActive (false);
+		btnReiniciar.gameObject.SetActive (true);
 	}
 	//reiniciar jogo
 	void Reiniciar(){
 	
 		if(ComecouJogo) {
-		
 
-			ComecouJogo = false;
+			SceneManager.LoadScene ("Cena01");
 			pontos = 0;
 			Time.timeScale = 1;
-			SceneManager.LoadScene ("Cena01");
+			ComecouJogo = false;		
+
+
 		}
 	}
 }
